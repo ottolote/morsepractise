@@ -149,9 +149,18 @@ class MorseGame:
         base_y = 300
         if self.in_result_phase:
             for i, char in enumerate(self.display_word):
-                color = (0, 255, 0) if i < len(self.input_word) and char == self.input_word[i] else (255, 0, 0)
+                correct = i < len(self.input_word) and char == self.input_word[i]
+                color = (0, 255, 0) if correct else (255, 0, 0)
                 char_surface = self.font.render(char, True, color)
-                self.screen.blit(char_surface, (10 + i * 35, base_y))
+                char_pos = (10 + i * 35, base_y)
+                self.screen.blit(char_surface, char_pos)
+                if not correct:
+                    # Draw a thicker strikethrough line in the middle of the letter
+                    line_start = char_pos[0]
+                    line_end = char_pos[0] + char_surface.get_width()
+                    line_y = char_pos[1] + char_surface.get_height() // 2
+                    line_thickness = 5  # Set the thickness of the line
+                    pygame.draw.line(self.screen, color, (line_start, line_y), (line_end, line_y), line_thickness)
 
         for i, char in enumerate(self.input_word):
             char_surface = self.font.render(char, True, (255, 255, 255))
